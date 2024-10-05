@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur de Besoin en Eau</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            color: #555;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 15px;
+            background-color: #007BFF;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+        .circle-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 20px;
+            margin-top: 40px;
+        }
+        .circle {
+            background-color: #FFA500;
+            color: #ffffff;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            border: 2px solid #FFD700;
+        }
+        .circle span {
+            font-weight: normal;
+            font-size: 14px;
+        }
+        .explanation {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="form-container">
+        <h1>Calcule ton besoin quotidien en eau</h1>
+        <form id="water-form">
+            <label for="sexe">Sexe :</label>
+            <select id="sexe" name="sexe">
+                <option value="femme">Femme</option>
+                <option value="homme">Homme</option>
+            </select>
+            <label for="age">Âge :</label>
+            <input type="number" id="age" name="age">
+            <label for="poids">Poids (en kg) :</label>
+            <input type="number" id="poids" name="poids">
+            <label for="activite">Niveau d'activité physique :</label>
+            <select id="activite" name="activite">
+                <option value="faible">Faible</option>
+                <option value="modere">Modéré</option>
+                <option value="eleve">Élevé</option>
+            </select>
+            <button type="button" onclick="calculateWaterIntake()">Calculer</button>
+        </form>
+    </div>
+    <div class="container hidden" id="result-container">
+        <h1>Besoin en Eau</h1>
+        <div class="circle-container">
+            <div class="circle" id="water-intake"><strong></strong><span>Besoin en Eau</span></div>
+        </div>
+        <div class="explanation" id="explanation-text"></div>
+        <div style="display: flex; justify-content: flex-end;">
+            <button class="small-button" onclick="returnToForm()">Retourner au formulaire</button>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function calculateWaterIntake() {
+            // Récupérer les valeurs du formulaire
+            const sexe = document.getElementById('sexe').value;
+            const age = document.getElementById('age').value;
+            const poids = document.getElementById('poids').value;
+            const activite = document.getElementById('activite').value;
+
+            // Calculer le besoin en eau de base
+            let besoinEauBase;
+            if (sexe === 'homme') {
+                besoinEauBase = 3700;
+            } else {
+                besoinEauBase = 2700;
+            }
+
+            // Ajuster en fonction de l'activité physique
+            let besoinEauActivite;
+            if (activite === 'faible') {
+                besoinEauActivite = 0;
+            } else if (activite === 'modere') {
+                besoinEauActivite = 500;
+            } else {
+                besoinEauActivite = 1000;
+            }
+
+            // Calculer le besoin total en eau
+            const besoinEauTotal = besoinEauBase + besoinEauActivite;
+
+            // Convertir en litres
+            const besoinEauLitres = besoinEauTotal / 1000;
+
+            // Afficher le besoin en eau
+            document.getElementById('water-intake').querySelector('strong').innerText = besoinEauLitres.toFixed(2) + ' L';
+
+            // Afficher le texte explicatif
+            const explanationText = `
+                Votre besoin quotidien en eau est estimé à ${besoinEauLitres.toFixed(2)} litres. 
+                Ce calcul est basé sur votre sexe, votre âge, votre poids et votre niveau d'activité physique.
+                Il est important de noter que ces valeurs sont des estimations générales et peuvent varier en fonction de divers facteurs individuels.
+                Assurez-vous de boire suffisamment d'eau tout au long de la journée pour rester hydraté, surtout si vous êtes actif ou si vous vivez dans un climat chaud.
+            `;
+            document.getElementById('explanation-text').innerText = explanationText;
+
+            // Masquer le formulaire et afficher le résultat
+            document.getElementById('form-container').classList.add('hidden');
+            document.getElementById('result-container').classList.remove('hidden');
+        }
+
+        function returnToForm() {
+            // Masquer le résultat et afficher le formulaire
+            document.getElementById('result-container').classList.add('hidden');
+            document.getElementById('form-container').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
