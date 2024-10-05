@@ -128,7 +128,6 @@
             <button class="small-button" onclick="returnToForm()">Retourner au formulaire</button>
         </div>
     </div>
-
     <script type="text/javascript">
         function calculateWaterIntake() {
             // Récupérer les valeurs du formulaire
@@ -137,26 +136,8 @@
             const poids = document.getElementById('poids').value;
             const activite = document.getElementById('activite').value;
 
-            // Calculer le besoin en eau de base
-            let besoinEauBase;
-            if (sexe === 'homme') {
-                besoinEauBase = 3700;
-            } else {
-                besoinEauBase = 2700;
-            }
-
-            // Ajuster en fonction de l'activité physique
-            let besoinEauActivite;
-            if (activite === 'faible') {
-                besoinEauActivite = 0;
-            } else if (activite === 'modere') {
-                besoinEauActivite = 500;
-            } else {
-                besoinEauActivite = 1000;
-            }
-
-            // Calculer le besoin total en eau
-            const besoinEauTotal = besoinEauBase + besoinEauActivite;
+            // Calculer le besoin en eau basé sur le poids
+            const besoinEauTotal = poids * 30;
 
             // Convertir en litres
             const besoinEauLitres = besoinEauTotal / 1000;
@@ -167,7 +148,7 @@
             // Afficher le texte explicatif
             const explanationText = `
                 Votre besoin quotidien en eau est estimé à ${besoinEauLitres.toFixed(2)} litres. 
-                Ce calcul est basé sur votre sexe, votre âge, votre poids et votre niveau d'activité physique.
+                Ce calcul est basé sur votre poids et une estimation de 30 ml par kg.
                 Il est important de noter que ces valeurs sont des estimations générales et peuvent varier en fonction de divers facteurs individuels.
                 Assurez-vous de boire suffisamment d'eau tout au long de la journée pour rester hydraté, surtout si vous êtes actif ou si vous vivez dans un climat chaud.
             `;
